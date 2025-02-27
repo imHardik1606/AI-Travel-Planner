@@ -1,4 +1,11 @@
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { SelectBudgetOptions, SelectTravelesList } from "@/constants/options";
 import React, { useEffect, useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
@@ -7,30 +14,32 @@ import { Button } from "@/components/ui/button";
 function CreateTrip() {
   const [place, setPlace] = useState();
   const [formData, setFormData] = useState([]);
+  const [open, setOpen] = useState(false);
 
-  const handleInputChange=(name, value)=>{
+  const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
-      [name] : value
-    })
-  }
+      [name]: value,
+    });
+  };
 
   useEffect(() => {
     console.log(formData);
-  },[formData])
+  }, [formData]);
 
-  const onGenerateTrip= () => {
-    if(formData?.noOfDays > 5)
-    {
-      <h1>Enter fewer days</h1>
+  const onGenerateTrip = () => {
+    if (formData?.noOfDays > 5) {
+      setOpen(true);
       return;
     }
 
     console.log(formData);
-  }
+  };
   return (
     <div className="sm:px-10 md:px-32 lg:px-56 xl:px-10 px-5 mt-10">
-      <h2 className="font-bold text-3xl">Tell us your travel preferences 🏕️🌴</h2>
+      <h2 className="font-bold text-3xl">
+        Tell us your travel preferences 🏕️🌴
+      </h2>
       <p className="mt-3 text-gray-500 text-xl">
         Just provide some basic information, and our trip planner will generate
         a customized itinerary based on your preferences.
@@ -47,7 +56,7 @@ function CreateTrip() {
               place,
               onChange: (v) => {
                 setPlace(v);
-                handleInputChange("location", v)
+                handleInputChange("location", v);
               },
             }}
           />
@@ -57,8 +66,10 @@ function CreateTrip() {
           <h2 className="text-xl my-3 font-medium">
             How many days are you planning your trip?
           </h2>
-          <Input placeholder={"Ex.3"} type="number" 
-            onChange={(e) => handleInputChange('noOfDays', e.target.value)}
+          <Input
+            placeholder={"Ex.3"}
+            type="number"
+            onChange={(e) => handleInputChange("noOfDays", e.target.value)}
           />
         </div>
       </div>
@@ -69,9 +80,9 @@ function CreateTrip() {
           {SelectBudgetOptions.map((item, index) => (
             <div
               key={index}
-              onClick={() => handleInputChange('budget', item.title)}
+              onClick={() => handleInputChange("budget", item.title)}
               className={`p-4 border cursor-pointer rounded-lg hover: shadow-lg
-                ${formData?.budget == item.title && ('shadow-lg border-red-400')}`}
+                ${formData?.budget == item.title && "shadow-lg border-black"}`}
             >
               <h2 className="text-4xl">{item.icon}</h2>
               <h2 className="font-bold text-lg">{item.title}</h2>
@@ -89,9 +100,12 @@ function CreateTrip() {
           {SelectTravelesList.map((item, index) => (
             <div
               key={index}
-              onClick={() => handleInputChange('traveler', item.people)}
+              onClick={() => handleInputChange("traveler", item.people)}
               className={`p-4 border cursor-pointer rounded-lg hover: shadow-lg
-                ${formData?.traveler == item.people && ('shadow-lg border-red-400')}`}
+                ${
+                  formData?.traveler == item.people &&
+                  "shadow-lg border-red-400"
+                }`}
             >
               <h2 className="text-4xl">{item.icon}</h2>
               <h2 className="font-bold text-lg">{item.title}</h2>
@@ -102,8 +116,22 @@ function CreateTrip() {
       </div>
 
       <div className="my-10 justify-end flex">
-        <Button onClick={onGenerateTrip} className="p-6 text-xl">Generate Trip</Button>
+        <Button onClick={onGenerateTrip} className="p-6 text-xl">
+          Generate Trip
+        </Button>
       </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-sm mx-auto">
+          <DialogTitle>Warning</DialogTitle>
+          <DialogDescription>
+            No. of days cannot be more than 5.
+          </DialogDescription>
+          <Button onClick={() => setOpen(false)} className="w-full mt-4">
+            OK
+          </Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
