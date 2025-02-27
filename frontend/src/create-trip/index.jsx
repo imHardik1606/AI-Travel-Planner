@@ -6,15 +6,16 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { SelectBudgetOptions, SelectTravelesList } from "@/constants/options";
+import { AI_PROMPT, SelectBudgetOptions, SelectTravelesList } from "@/constants/options";
 import React, { useEffect, useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { Button } from "@/components/ui/button";
 
 function CreateTrip() {
   const [place, setPlace] = useState();
-  const [formData, setFormData] = useState([]);
+  const [formData, setFormData] = useState({});
   const [open, setOpen] = useState(false);
+  const [dataPopUp, setDataPopUp] = useState(false);
 
   const handleInputChange = (name, value) => {
     setFormData({
@@ -28,12 +29,24 @@ function CreateTrip() {
   }, [formData]);
 
   const onGenerateTrip = () => {
-    if (formData?.noOfDays > 5) {
+    if (formData?.noOfDays > 30) {
       setOpen(true);
       return;
     }
 
-    console.log(formData);
+    if(!formData?.location || !formData?.budget || !formData?.traveler || !formData?.noOfDays){
+      setDataPopUp(true);
+      return;
+    }
+
+    const FINAL_PROMPT = AI_PROMPT
+    .replace('{location}', formData?.location?.label)
+    .replace('{totalDays}', formData?.noOfDays)
+    .replace('{traveler}', formData?.traveler)
+    .replace('{budget}', formData?.budget)
+    .replace('{totalDays}', formData?.noOfDays)
+
+    console.log(FINAL_PROMPT)
   };
   return (
     <div className="sm:px-10 md:px-32 lg:px-56 xl:px-10 px-5 mt-10">
@@ -82,7 +95,7 @@ function CreateTrip() {
               key={index}
               onClick={() => handleInputChange("budget", item.title)}
               className={`p-4 border cursor-pointer rounded-lg hover: shadow-lg
-                ${formData?.budget == item.title && "shadow-lg border-black"}`}
+                ${formData?.budget == item.title && "shadow-lg border-red-400"}`}
             >
               <h2 className="text-4xl">{item.icon}</h2>
               <h2 className="font-bold text-lg">{item.title}</h2>
@@ -125,9 +138,21 @@ function CreateTrip() {
         <DialogContent className="max-w-sm mx-auto">
           <DialogTitle>Warning</DialogTitle>
           <DialogDescription>
-            No. of days cannot be more than 5.
+            No. of days cannot be more than 30 days.
           </DialogDescription>
           <Button onClick={() => setOpen(false)} className="w-full mt-4">
+            OK
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={dataPopUp} onOpenChange={setDataPopUp}>
+        <DialogContent className="max-w-sm mx-auto">
+          <DialogTitle>Warning</DialogTitle>
+          <DialogDescription>
+            Please Fill all the form fields.
+          </DialogDescription>
+          <Button onClick={() => setDataPopUp(false)} className="w-full mt-4">
             OK
           </Button>
         </DialogContent>
