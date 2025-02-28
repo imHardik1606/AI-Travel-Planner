@@ -1,20 +1,23 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.jsx";
 import { BrowserRouter, Routes, Route } from "react-router";
-import CreateTrip from "./create-trip/index"
-import Header from './components/custom/Header';
+import CreateTrip from "./create-trip/index";
+import Header from "./components/custom/Header";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
-
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-        <Header/>
-      <Routes>
-        <Route path="/" element={<App/>}></Route>
-        <Route path='/create-trip' element={<CreateTrip/>}></Route>
-      </Routes>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
+        <Header />
+        <Routes>
+          <Route path="/" element={<App />}></Route>
+          <Route path="/create-trip" element={<CreateTrip />}></Route>
+        </Routes>
+      </GoogleOAuthProvider>
+      ;
     </BrowserRouter>
   </StrictMode>
-)
+);
