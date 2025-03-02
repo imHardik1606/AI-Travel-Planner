@@ -39,7 +39,7 @@ npm install
 ```
 
 ### 3️⃣ Configure Environment Variables
-Create a `.env` file in the root directory and add the required API keys:
+Create a `.env` file in the frontend directory and add the required API keys:
 ```sh
 GEMINI_API_KEY=your_api_key_here
 ```
