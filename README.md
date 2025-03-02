@@ -19,9 +19,9 @@ Gemini Travel Planner is an AI-powered travel assistant that helps users plan th
 
 ## 📂 Project Structure
 ```
-📦 AI-travel-planner
- ┣ 📂 frontend           # All Components
- ┣ 📜 .env               # API keys and configuration
+📦 frontend
+ ┣ 📂 public           # public Components
+ ┣ 📂 src               # API keys and configuration
  ┣ 📜 package.json       # Project dependencies
  ┣ 📜 README.md          # Documentation
 ```
