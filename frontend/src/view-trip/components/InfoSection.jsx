@@ -1,8 +1,30 @@
 import { Button } from '@/components/ui/button';
-import React from 'react'
+import { GetPlaceDetails } from '@/service/GlobalApi';
+import React, { useEffect } from 'react'
 import { IoIosSend } from "react-icons/io";
 
+const PHOTO_REF_URL='https://places.googleapis.com/v1/{NAME}/media?maxHeightPx=600&maxWidthPx=600&key=' + import.meta.env.VITE_GOOGLE_PLACE_API_KEY
+// console.log(import.meta.env.VITE_GOOGLE_PLACE_API_KEY);
+
 const InfoSection = ({trip}) => {
+
+  useEffect(()=>{
+    trip&&GetPlacePhoto();
+  },[trip]);
+
+  const GetPlacePhoto=async()=>{
+    const data={
+      textQuery:trip?.userSelection?.location?.label
+    }
+    const result = await GetPlaceDetails(data).then(resp=>{
+      console.log(resp.data.places[0].photos[3].name);
+
+      const PhotoUrl = PHOTO_REF_URL.replace('{NAME}',resp.data.places[0].photos[3].name);
+
+      console.log(PhotoUrl)
+    })
+  }
+
   return (
     <div>
         <img src="/trip.jpg" alt="" className='h-[340px] w-full object-cover rounded-xl'/>
